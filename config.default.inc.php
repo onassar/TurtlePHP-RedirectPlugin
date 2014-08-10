@@ -11,7 +11,7 @@
      * 
      */
     $config = array(
-        'domain' => 'local.accountdock.com',
+        'domain' => 'local.example.com',
         'https' => true
     );
 
