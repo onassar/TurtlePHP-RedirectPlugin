@@ -91,8 +91,7 @@
             if (is_null(self::$_initiated) === false) {
                 self::$_initiated = true;
                 require_once self::$_configPath;
-                $config = \Plugin\Config::retrieve();
-                $config = $config['TurtlePHP-RedirectPlugin'];
+                $config = \Plugin\Config::retrieve('TurtlePHP-RedirectPlugin');
 
                 // redirects
                 self::_httpRedirect($config['domain']);
