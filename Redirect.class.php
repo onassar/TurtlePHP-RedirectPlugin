@@ -71,7 +71,10 @@
                 $url = 'https://' . ($_SERVER['HTTP_HOST']) . ($_SERVER['REQUEST_URI']);
 
                 // exclude for facebook (like count)
-                if (strstr($_SERVER['HTTP_USER_AGENT'], 'facebook') === false) {
+                if (
+                    !isset($_SERVER['HTTP_USER_AGENT'])
+                    || strstr($_SERVER['HTTP_USER_AGENT'], 'facebook') === false
+                ) {
                     header('HTTP/1.1 301 Moved Permanently');
                     header('Location: ' . ($url));
                     exit(0);
