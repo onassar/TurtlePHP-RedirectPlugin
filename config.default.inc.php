@@ -12,6 +12,9 @@
      */
     $config = array(
         'domain' => 'local.example.com',
+        'allowed' => array(
+            'local.example.com'
+        ),
         'https' => true
     );
 

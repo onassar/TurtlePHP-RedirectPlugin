@@ -44,13 +44,14 @@
          * 
          * @access protected
          * @static
+         * @param  array $allowed
          * @param  string $domain
          * @return void
          */
-        protected static function _httpRedirect($domain)
+        protected static function _httpRedirect(array $allowed, $domain)
         {
             $current = $_SERVER['HTTP_HOST'];
-            if ($current !== $domain) {
+            if (!in_array($current, $allowed)) {
                 $uri = 'http://' . ($domain) . ($_SERVER['REQUEST_URI']);
                 header('Location: ' . ($uri));
                 exit(0);
@@ -68,7 +69,8 @@
         {
             // non-secure
             if (HTTPS === false) {
-                $url = 'https://' . ($_SERVER['HTTP_HOST']) . ($_SERVER['REQUEST_URI']);
+                $url = 'https://' . ($_SERVER['HTTP_HOST']) . 
+                    ($_SERVER['REQUEST_URI']);
 
                 // exclude for facebook (like count)
                 if (
@@ -97,7 +99,7 @@
                 $config = \Plugin\Config::retrieve('TurtlePHP-RedirectPlugin');
 
                 // redirects
-                self::_httpRedirect($config['domain']);
+                self::_httpRedirect($config['allowed'], $config['domain']);
                 if ($config['https'] === true) {
                     self::_httpsRedirect();
                 }
