@@ -12,7 +12,7 @@
     }
 
     /**
-     * Database
+     * Redirect
      * 
      * Redirect (http/https) plugin for TurtlePHP
      * 
