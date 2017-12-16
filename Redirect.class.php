@@ -24,8 +24,8 @@
         /**
          * _configPath
          *
-         * @var    string
-         * @access protected
+         * @var     string
+         * @access  protected
          * @static
          */
         protected static $_configPath = 'config.default.inc.php';
@@ -33,8 +33,8 @@
         /**
          * _initiated
          *
-         * @var    boolean
-         * @access protected
+         * @var     boolean
+         * @access  protected
          * @static
          */
         protected static $_initiated = false;
@@ -42,16 +42,16 @@
         /**
          * _httpRedirect
          * 
-         * @access protected
+         * @access  protected
          * @static
-         * @param  array $allowed
-         * @param  string $domain
-         * @return void
+         * @param   array $allowed
+         * @param   string $domain
+         * @return  void
          */
         protected static function _httpRedirect(array $allowed, $domain)
         {
             $current = $_SERVER['HTTP_HOST'];
-            if (!in_array($current, $allowed)) {
+            if (in_array($current, $allowed) === false) {
                 $uri = 'http://' . ($domain) . ($_SERVER['REQUEST_URI']);
                 header('Location: ' . ($uri));
                 exit(0);
@@ -61,9 +61,9 @@
         /**
          * _httpsRedirect
          * 
-         * @access protected
+         * @access  protected
          * @static
-         * @return void
+         * @return  void
          */
         protected static function _httpsRedirect()
         {
@@ -74,7 +74,7 @@
 
                 // exclude for facebook (like count)
                 if (
-                    !isset($_SERVER['HTTP_USER_AGENT'])
+                    isset($_SERVER['HTTP_USER_AGENT']) === false
                     || strstr($_SERVER['HTTP_USER_AGENT'], 'facebook') === false
                 ) {
                     header('HTTP/1.1 301 Moved Permanently');
@@ -87,9 +87,9 @@
         /**
          * init
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return void
+         * @return  void
          */
         public static function init()
         {
@@ -109,9 +109,9 @@
         /**
          * setConfigPath
          * 
-         * @access public
-         * @param  string $path
-         * @return void
+         * @access  public
+         * @param   string $path
+         * @return  void
          */
         public static function setConfigPath($path)
         {
@@ -123,6 +123,6 @@
     $info = pathinfo(__DIR__);
     $parent = ($info['dirname']) . '/' . ($info['basename']);
     $configPath = ($parent) . '/config.inc.php';
-    if (is_file($configPath)) {
+    if (is_file($configPath) === true) {
         Redirect::setConfigPath($configPath);
     }
