@@ -104,6 +104,19 @@
         }
 
         /**
+         * _getHTTPVia
+         * 
+         * @access  protected
+         * @static
+         * @return  null|string
+         */
+        protected static function _getHTTPVia(): ?string
+        {
+            $httpVia = $_SERVER['HTTP_VIA'] ?? null;
+            return $httpVia;
+        }
+
+        /**
          * _getRequestURI
          * 
          * @access  protected
@@ -114,6 +127,30 @@
         {
             $path = $_SERVER['REQUEST_URI'] ?? null;
             return $path;
+        }
+
+        /**
+         * _handleCloudFrontRedirect
+         * 
+         * Redirects any CloudFront requests that hit PHP back to the fallback
+         * host (to prevent accidentally mirroring a site).
+         * 
+         * @access  protected
+         * @static
+         * @return  bool
+         */
+        protected static function _handleCloudFrontRedirect(): bool
+        {
+            if (static::_isCloudFrontRequest() === false) {
+                return false;
+            }
+            $protocol = 'https';
+            $host = $configData['fallbackHost'];
+            $path = static::_getRequestURI() ?? '/';
+            $url = ($protocol) . '://' . ($host) . ($path);
+            $permanent = true;
+            static::_redirect($url, $permanent);
+            return true;
         }
 
         /**
@@ -162,6 +199,21 @@
             $permanent = true;
             static::_redirect($url, $permanent);
             return true;
+        }
+
+        /**
+         * _isCloudFrontRequest
+         * 
+         * @access  protected
+         * @static
+         * @return  bool
+         */
+        protected static function _isCloudFrontRequest(): bool
+        {
+            $httpVia = static::_getHTTPVia() ?? '';
+            $needle = 'CloudFront';
+            $found = strpos($httpVia, $needle) !== false;
+            return $found;
         }
 
         /**
@@ -221,6 +273,7 @@
             }
             static::_setInitiated();
             static::_loadConfigPath();
+            static::_handleCloudFrontRedirect();
             static::_handleHostRedirect();
             static::_handleHTTPSRedirect();
             return true;
