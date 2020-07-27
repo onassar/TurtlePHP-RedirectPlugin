@@ -145,6 +145,7 @@
                 return false;
             }
             $protocol = 'https';
+            $configData = static::_getConfigData();
             $host = $configData['fallbackHost'];
             $path = static::_getRequestURI() ?? '/';
             $url = ($protocol) . '://' . ($host) . ($path);
