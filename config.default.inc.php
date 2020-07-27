@@ -7,24 +7,19 @@
     namespace Plugin\Redirect;
 
     /**
-     * Config settings
+     * Plugin Config Data
      * 
      */
-    $config = array(
-        'domain' => 'local.example.com',
-        'allowed' => array(
+    $pluginConfigData = array(
+        'allowedHosts' => array(
             'local.example.com'
         ),
-        'https' => true
+        'fallbackHost' => 'local.example.com'
     );
 
     /**
-     * Config storage
+     * Storage
      * 
      */
-
-    // Store
-    \Plugin\Config::add(
-        'TurtlePHP-RedirectPlugin',
-        $config
-    );
+    $key = 'TurtlePHP-RedirectPlugin';
+    \Plugin\Config::add($key, $pluginConfigData);
