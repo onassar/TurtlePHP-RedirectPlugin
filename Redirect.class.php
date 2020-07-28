@@ -130,6 +130,22 @@
         }
 
         /**
+         * _handleCDNRedirect
+         * 
+         * Redirects any CDN requests that hit PHP back to the fallback host (to
+         * prevent accidentally mirroring a site).
+         * 
+         * @access  protected
+         * @static
+         * @return  bool
+         */
+        protected static function _handleCDNRedirect(): bool
+        {
+            static::_handleCloudFrontRedirect();
+            return false;
+        }
+
+        /**
          * _handleCloudFrontRedirect
          * 
          * Redirects any CloudFront requests that hit PHP back to the fallback
@@ -274,7 +290,7 @@
             }
             static::_setInitiated();
             static::_loadConfigPath();
-            static::_handleCloudFrontRedirect();
+            static::_handleCDNRedirect();
             static::_handleHostRedirect();
             static::_handleHTTPSRedirect();
             return true;
