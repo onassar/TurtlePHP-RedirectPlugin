@@ -13,7 +13,10 @@
     /**
      * Redirect
      * 
-     * Manages HTTP/HTTPS redirect for TurtlePHP requests.
+     * Manages redirecting requests based on a variety of conditions, including:
+     * - from HTTP to HTTPS
+     * - from a CDN to the configured-host (to prevent page mirroring)
+     * - from an invalid (non-whitelisted) host to the configured-host
      * 
      * @author  Oliver Nassar <onassar@gmail.com>
      * @abstract
