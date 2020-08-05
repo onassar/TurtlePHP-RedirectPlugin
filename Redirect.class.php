@@ -3,15 +3,10 @@
     // namespace
     namespace Plugin;
 
-    // dependency check
-    if (class_exists('\\Plugin\\Config') === false) {
-        $link = 'https://github.com/onassar/TurtlePHP-ConfigPlugin';
-        $msg = '*Config* class required. Please see ' . ($link);
-        throw new \Exception($msg);
-    }
-
     /**
      * Redirect
+     * 
+     * Redirect plugin for TurtlePHP.
      * 
      * Manages redirecting requests based on a variety of conditions, including:
      * - from HTTP to HTTPS
@@ -40,6 +35,36 @@
          * @static
          */
         protected static $_initiated = false;
+
+        /**
+         * _checkConfigPluginDependency
+         * 
+         * @throws  \Exception
+         * @access  protected
+         * @static
+         * @return  bool
+         */
+        protected static function _checkConfigPluginDependency(): bool
+        {
+            if (class_exists('\\Plugin\\Config') === true) {
+                return true;
+            }
+            $link = 'https://github.com/onassar/TurtlePHP-ConfigPlugin';
+            $msg = '*\Plugin\Config* class required. Please see ' . ($link);
+            throw new \Exception($msg);
+        }
+
+        /**
+         * _checkDependencies
+         * 
+         * @access  protected
+         * @static
+         * @return  void
+         */
+        protected static function _checkDependencies(): void
+        {
+            static::_checkConfigPluginDependency();
+        }
 
         /**
          * _getConfigData
@@ -245,7 +270,8 @@
          */
         protected static function _loadConfigPath(): void
         {
-            require_once static::$_configPath;
+            $path = static::$_configPath;
+            require_once $path;
         }
 
         /**
@@ -292,6 +318,7 @@
                 return false;
             }
             static::_setInitiated();
+            static::_checkDependencies();
             static::_loadConfigPath();
             static::_handleCDNRedirect();
             static::_handleHostRedirect();
