@@ -15,8 +15,9 @@
      * 
      * @author  Oliver Nassar <onassar@gmail.com>
      * @abstract
+     * @extends Base
      */
-    abstract class Redirect
+    abstract class Redirect extends Base
     {
         /**
          * _configPath
@@ -37,24 +38,6 @@
         protected static $_initiated = false;
 
         /**
-         * _checkConfigPluginDependency
-         * 
-         * @throws  \Exception
-         * @access  protected
-         * @static
-         * @return  bool
-         */
-        protected static function _checkConfigPluginDependency(): bool
-        {
-            if (class_exists('\\Plugin\\Config') === true) {
-                return true;
-            }
-            $link = 'https://github.com/onassar/TurtlePHP-ConfigPlugin';
-            $msg = '*\Plugin\Config* class required. Please see ' . ($link);
-            throw new \Exception($msg);
-        }
-
-        /**
          * _checkDependencies
          * 
          * @access  protected
@@ -64,20 +47,6 @@
         protected static function _checkDependencies(): void
         {
             static::_checkConfigPluginDependency();
-        }
-
-        /**
-         * _getConfigData
-         * 
-         * @access  protected
-         * @static
-         * @return  array
-         */
-        protected static function _getConfigData(): array
-        {
-            $key = 'TurtlePHP-RedirectPlugin';
-            $configData = \Plugin\Config::retrieve($key);
-            return $configData;
         }
 
         /**
@@ -262,19 +231,6 @@
         }
 
         /**
-         * _loadConfigPath
-         * 
-         * @access  protected
-         * @static
-         * @return  void
-         */
-        protected static function _loadConfigPath(): void
-        {
-            $path = static::$_configPath;
-            require_once $path;
-        }
-
-        /**
          * _redirect
          * 
          * @access  protected
@@ -286,23 +242,12 @@
         protected static function _redirect(string $uri, bool $permanent): void
         {
             if ($permanent === true) {
-                header('HTTP/1.1 301 Moved Permanently');
+                $value = 'HTTP/1.1 301 Moved Permanently';
+                static::_setHeader($value);
             }
             $value = 'Location: ' . ($uri);
-            header($value);
+            static::_setHeader($value);
             exit(0);
-        }
-
-        /**
-         * _setInitiated
-         * 
-         * @access  protected
-         * @static
-         * @return  void
-         */
-        protected static function _setInitiated(): void
-        {
-            static::$_initiated = true;
         }
 
         /**
@@ -317,28 +262,10 @@
             if (static::$_initiated === true) {
                 return false;
             }
-            static::_setInitiated();
-            static::_checkDependencies();
-            static::_loadConfigPath();
+            parent::init();
             static::_handleCDNRedirect();
             static::_handleHostRedirect();
             static::_handleHTTPSRedirect();
-            return true;
-        }
-
-        /**
-         * setConfigPath
-         * 
-         * @access  public
-         * @param   string $configPath
-         * @return  bool
-         */
-        public static function setConfigPath(string $configPath): bool
-        {
-            if (is_file($configPath) === false) {
-                return false;
-            }
-            static::$_configPath = $configPath;
             return true;
         }
     }
