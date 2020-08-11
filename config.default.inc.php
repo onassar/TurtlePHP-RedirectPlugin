@@ -1,12 +1,6 @@
 <?php
 
     /**
-     * Namespace
-     * 
-     */
-    namespace Plugin\Redirect;
-
-    /**
      * Plugin Config Data
      * 
      */
@@ -22,4 +16,4 @@
      * 
      */
     $key = 'TurtlePHP-RedirectPlugin';
-    \Plugin\Config::add($key, $pluginConfigData);
+    TurtlePHP\Plugin\Config::set($key, $pluginConfigData);
