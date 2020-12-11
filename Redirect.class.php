@@ -50,6 +50,25 @@
         }
 
         /**
+         * _getFallbackHost
+         * 
+         * @access  protected
+         * @static
+         * @return  string
+         */
+        protected static function _getFallbackHost(): string
+        {
+            $configData = static::_getConfigData();
+            $host = $configData['fallbackHost'];
+            if (is_callable($host) === false) {
+                return $host;
+            }
+            $params = array();
+            $host = call_user_func_array($host, $params);
+            return $host;
+        }
+
+        /**
          * _getFallbackURL
          * 
          * @access  protected
@@ -60,7 +79,7 @@
         {
             $protocol = 'https';
             $configData = static::_getConfigData();
-            $host = $configData['fallbackHost'];
+            $host = static::_getFallbackHost();
             $path = '/';
             $url = ($protocol) . '://' . ($host) . ($path);
             return $url;
@@ -159,7 +178,7 @@
             }
             $protocol = 'https';
             $configData = static::_getConfigData();
-            $host = $configData['fallbackHost'];
+            $host = static::_getFallbackHost();
             $path = static::_getRequestURI() ?? '/';
             $url = ($protocol) . '://' . ($host) . ($path);
             $permanent = true;
