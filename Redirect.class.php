@@ -73,14 +73,14 @@
          * 
          * @access  protected
          * @static
+         * @param   string $path (default: '/')
          * @return  string
          */
-        protected static function _getFallbackURL(): string
+        protected static function _getFallbackURL(string $path = '/'): string
         {
             $protocol = 'https';
             $configData = static::_getConfigData();
             $host = static::_getFallbackHost();
-            $path = '/';
             $url = ($protocol) . '://' . ($host) . ($path);
             return $url;
         }
@@ -208,6 +208,11 @@
                 return false;
             }
             $url = static::_getFallbackURL();
+            $trimmedHTTPHost = preg_replace('/^www\./i', '', $httpHost);
+            if (in_array($trimmedHTTPHost, $allowedHosts) === true) {
+                $path = static::_getRequestURI() ?? '/';
+                $url = static::_getFallbackURL($path);
+            }
             $permanent = false;
             static::_redirect($url, $permanent);
             return true;
